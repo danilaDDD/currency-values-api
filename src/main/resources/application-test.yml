@@ -1,0 +1,13 @@
+spring:
+  data:
+    mongodb:
+      host: ${DB_HOST:localhost}
+      port: ${DB_PORT:27017}
+      database: ${DB_NAME_TEST:jfundCurrencyValuesTest}
+      password: ${DB_PASSWORD_TEST:float123}
+      username: ${DB_USER_TEST:develop}
+      authentication-database: admin
+
+app:
+  currencyApi:
+    accessKey: ${CURRENCY_ACCESS_KEY:5619c1c4f1011d7b8c0b32054e2e676b}

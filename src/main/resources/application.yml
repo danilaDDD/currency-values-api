@@ -11,3 +11,7 @@ spring:
 
 server:
   port: 8082
+
+app:
+  kafka:
+    currency-keys-topic:${CURRENCY-KEYS-TOPIC:jfund-currency-keys}

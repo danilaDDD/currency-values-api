@@ -5,7 +5,7 @@ spring:
       port: ${DB_PORT:27017}
       database: ${DB_NAME_TEST:jfundCurrencyValuesTest}
       password: ${DB_PASSWORD_TEST:float123}
-      username: ${DB_USER_TEST:develop}
+      username: ${DB_USER_TEST:jfund}
       authentication-database: admin
 
 app:

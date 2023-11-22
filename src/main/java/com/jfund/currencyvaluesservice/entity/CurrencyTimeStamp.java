@@ -21,14 +21,13 @@ public class CurrencyTimeStamp {
     @Id
     private String id = LocalDateTime.now().toString();
 
-    @Field
     private LocalDateTime dateTime = LocalDateTime.now();
 
-    @Field
     private LocalDateTime created = LocalDateTime.now();
 
-    @Field
     private LocalDateTime updated = LocalDateTime.now();
+
+    private boolean sentToCandleApi = false;
 
     Collection<CurrencyValue> values;
 
@@ -38,9 +37,10 @@ public class CurrencyTimeStamp {
         this.setValues(values);
     }
     @PersistenceCreator
-    public CurrencyTimeStamp(String id, LocalDateTime dateTime, LocalDateTime updated, LocalDateTime created, Collection<CurrencyValue> values) {
+    public CurrencyTimeStamp(String id, LocalDateTime dateTime, boolean sentToCandleApi, LocalDateTime updated, LocalDateTime created, Collection<CurrencyValue> values) {
         this.id = id;
         this.dateTime = dateTime;
+        this.sentToCandleApi = sentToCandleApi;
         this.updated = updated;
         this.created = created;
         this.values = values;

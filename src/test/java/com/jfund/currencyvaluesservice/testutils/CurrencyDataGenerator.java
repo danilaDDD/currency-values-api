@@ -12,7 +12,7 @@ public class CurrencyDataGenerator {
         Random random = new Random();
         currencyKeys.forEach(key -> result.put(key, random.nextFloat()));
 
-        return Map.of("USDRUB", 123.3F, "JPGRUB", 23.456F, "USDJPG", 158F);
+        return Map.of("USDRUB", random.nextFloat(), "JPGRUB", random.nextFloat(), "USDJPG", random.nextFloat());
     }
 
     private Set<String> generateRandomKeys(int size){

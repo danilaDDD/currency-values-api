@@ -1,15 +1,15 @@
 package com.jfund.currencyvaluesservice.saver;
 
+import com.jfund.currencyvaluesservice.entity.CurrencyTimeStamp;
+import com.jfund.currencyvaluesservice.repository.CurrencyTimeStampRepository;
 import com.jfund.currencyvaluesservice.testutils.CustomerTestUtils;
-import com.jfund.jfundclilib.UpdateOrCreateData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -17,6 +17,8 @@ import java.util.concurrent.ExecutionException;
 public class NewCurrencyValuesSaverTest {
     private NewCurrencyValueSaver newCurrencyValueSaver;
     private CustomerTestUtils customerTestUtils;
+    private CurrencyTimeStampRepository currencyTimeStampRepository;
+
     @Autowired
     public void setNewCurrencyValueSaver(NewCurrencyValueSaver newCurrencyValueSaver) {
         this.newCurrencyValueSaver = newCurrencyValueSaver;
@@ -25,6 +27,10 @@ public class NewCurrencyValuesSaverTest {
     @Autowired
     public void setCustomerTestUtils(CustomerTestUtils customerTestUtils) {
         this.customerTestUtils = customerTestUtils;
+    }
+    @Autowired
+    public void setCurrencyTimeStampRepository(CurrencyTimeStampRepository currencyTimeStampRepository) {
+        this.currencyTimeStampRepository = currencyTimeStampRepository;
     }
     @BeforeEach
     public void beforeEach(){
@@ -56,22 +62,23 @@ public class NewCurrencyValuesSaverTest {
 
     }
     @Test
-    public void shouldSuccessWhenDifferentInputData() throws ExecutionException, InterruptedException {
-        CompletableFuture<Void> taskWithInputData1 = CompletableFuture.runAsync(() -> {
-            Map<String, Float> inputData = customerTestUtils.generateCurrencyKeys(100);
-            newCurrencyValueSaver.save(inputData);
-        });
+    public void shouldSave3TimeStampWhenDifferentInputData() throws ExecutionException, InterruptedException {
 
-        CompletableFuture<Void> taskWithInputData2 = CompletableFuture.runAsync(() -> {
-            Map<String, Float> inputData = customerTestUtils.generateCurrencyKeys(200);
-            newCurrencyValueSaver.save(inputData);
-        });
+        Map<String, Float> inputData1 = customerTestUtils.generateCurrencyKeys(100);
+        newCurrencyValueSaver.save(inputData1);
+        Thread.sleep(20);
 
-        CompletableFuture<Void> taskWithInputData3 = CompletableFuture.runAsync(() -> {
-            Map<String, Float> inputData = customerTestUtils.generateCurrencyKeys(100);
-            newCurrencyValueSaver.save(inputData);
-        });
+        Map<String, Float> inputData2 = customerTestUtils.generateCurrencyKeys(100);
+        newCurrencyValueSaver.save(inputData2);
+        Thread.sleep(20);
 
-        CompletableFuture.allOf(taskWithInputData1, taskWithInputData2, taskWithInputData3).get();
+        Map<String, Float> inputData3 = customerTestUtils.generateCurrencyKeys(100);
+        newCurrencyValueSaver.save(inputData3);
+        Thread.sleep(20);
+
+
+        List<CurrencyTimeStamp> timeStampList = this.currencyTimeStampRepository.findAll();
+        assertEquals(3, timeStampList.size());
+
     }
 }

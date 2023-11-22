@@ -11,3 +11,6 @@ spring:
 app:
   currencyApi:
     accessKey: ${CURRENCY_ACCESS_KEY:5619c1c4f1011d7b8c0b32054e2e676b}
+
+  kafka:
+    currency-keys-topic: ${CURRENCY-KEYS-TOPIC:jfund-currency-keys}

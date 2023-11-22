@@ -23,7 +23,7 @@ public class ConcurrentNewCurrencyKeyValueSaver implements NewCurrencyValueSaver
     private GetCurrencyValuesRequest getCurrencyValuesRequest;
     private CurrencyTimeStampService timeStampService;
 
-    private final LocalDateTime actualDateTime = LocalDateTime.now();
+    private LocalDateTime actualDateTime;
 
     private float accuracyForDifferentFloat = 0.0005F;
 
@@ -51,6 +51,7 @@ public class ConcurrentNewCurrencyKeyValueSaver implements NewCurrencyValueSaver
     }
     private UpdateOrCreateData handle(Map<String, Float> inputCurrencyKeyValue){
         if(!inputCurrencyKeyValue.isEmpty()){
+            this.actualDateTime = LocalDateTime.now();
             Optional<CurrencyTimeStamp> lastTimeStamp = timeStampService.findLastTimeStamp();
             List<CurrencyValue> inputCurrencyValues = inputCurrencyKeyValue.entrySet()
                     .stream().map(entry -> new CurrencyValue(entry.getKey(), entry.getValue())).toList();
@@ -59,22 +60,25 @@ public class ConcurrentNewCurrencyKeyValueSaver implements NewCurrencyValueSaver
                 return createFirstTimeStamp(inputCurrencyValues);
             }else{
                 CurrencyTimeStamp newTimeStamp = new CurrencyTimeStamp(this.actualDateTime, inputCurrencyValues);
-                return createNewTimeStampIfDifferent(inputCurrencyKeyValue, newTimeStamp);
+                return createNewTimeStampIfDifferent(inputCurrencyKeyValue, lastTimeStamp.get(), newTimeStamp);
             }
         }
 
         return new UpdateOrCreateData();
     }
-    private UpdateOrCreateData createNewTimeStampIfDifferent(Map<String, Float> inputCurrencyKeyValue, CurrencyTimeStamp newTimeStamp) {
-        if(isAnyDifferentCurrencyValues(inputCurrencyKeyValue, inputCurrencyKeyValue)){
+    private UpdateOrCreateData createNewTimeStampIfDifferent(Map<String, Float> inputCurrencyKeyValue, CurrencyTimeStamp lastTimeStamp, CurrencyTimeStamp newTimeStamp) {
+        Map<String, Float> lastCurrencyKeyValue = new HashMap<>();
+        lastTimeStamp.getValues().forEach(currencyValue -> lastCurrencyKeyValue.put(currencyValue.getKey(), currencyValue.getValue()));
+
+        if(isAnyDifferentCurrencyValues(inputCurrencyKeyValue, lastCurrencyKeyValue)){
             timeStampService.saveEntity(newTimeStamp);
             return new UpdateOrCreateData().setCreateCount(1);
         }else return new UpdateOrCreateData();
     }
 
     private boolean isAnyDifferentCurrencyValues(Map<String, Float> inputCurrencyKeyValue,Map<String, Float> lastCurrencyValues){
-        Set<String> unionCurrencyKeysSet = lastCurrencyValues.keySet();
-        unionCurrencyKeysSet.removeAll(inputCurrencyKeyValue.keySet());
+        Set<String> unionCurrencyKeysSet = new HashSet<>(lastCurrencyValues.keySet());
+        unionCurrencyKeysSet.retainAll(inputCurrencyKeyValue.keySet());
 
         Map<String, Float> differentCurrencyValues = new HashMap<>();
         for(String currencyKey: unionCurrencyKeysSet){

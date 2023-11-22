@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class SimpleGetCurrencyValuesRequest implements GetCurrencyValuesRequest{
-    @Value("${app.currencyApi.accessKey")
+    @Value("${app.currencyApi.accessKey}")
     private String accessKey;
     @Override
     public Map<String, Float> getResponse(CurrencyRequestArgs args) {

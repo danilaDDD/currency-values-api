@@ -1,8 +1,10 @@
 package com.jfund.currencyvaluesservice;
 
+import com.jfund.currencyvaluesservice.saver.NewCurrencyValueSaver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,15 +17,16 @@ class CurrencyValuesServiceApplicationTests {
 
     @Autowired
     private ConfigurableEnvironment env;
-
-    @BeforeEach
-    public void beforeEach(){
-        env.setActiveProfiles("test");
-    }
+    private NewCurrencyValueSaver newCurrencyValueSaver;
 
     @Test
     void contextLoads() {
         assertSame("test", profile);
     }
 
+    @Qualifier("newCurrencyValueSaver")
+    @Autowired
+    public void setNewCurrencyValueSaver(NewCurrencyValueSaver newCurrencyValueSaver) {
+        this.newCurrencyValueSaver = newCurrencyValueSaver;
+    }
 }

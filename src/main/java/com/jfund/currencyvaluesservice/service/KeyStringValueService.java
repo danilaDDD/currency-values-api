@@ -1,11 +1,11 @@
 package com.jfund.currencyvaluesservice.service;
 
 import com.jfund.currencyvaluesservice.entity.KeyStringValueEntity;
+import com.jfund.currencyvaluesservice.exceptions.ConsumingDataValueNotFoundException;
 import com.jfund.currencyvaluesservice.repository.KeyStringValueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -23,10 +23,12 @@ public class KeyStringValueService {
         return keyStringValueRepository.save(entity);
     }
 
-    public String getStringValueOrDefault(String key, String defaultValue){
+    public String getStringValue(String key) throws ConsumingDataValueNotFoundException {
          Optional<KeyStringValueEntity> entityOptional = keyStringValueRepository.findById(key);
          if(entityOptional.isPresent()){
              return entityOptional.get().getStringValue();
-         }else return defaultValue;
+         }else{
+             throw new ConsumingDataValueNotFoundException("entity by key %s not found");
+         }
     }
 }

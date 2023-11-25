@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
-
+@Slf4j(topic = "errors")
 @Component
 public class LoadCurrencyValues implements CliRunner {
     private GetCurrencyValuesRequest getCurrencyValuesRequest;
@@ -40,9 +40,14 @@ public class LoadCurrencyValues implements CliRunner {
 
     @Override
     public UpdateOrCreateData invoke() {
-        return handle();
-    }
+        try {
+            return handle();
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return new UpdateOrCreateData().setErrorMessage(e.getMessage());
+        }
 
+    }
     private UpdateOrCreateData handle(){
         List<String> currencyKeys = consumerDataSource.getCurrencyKeys();
         Map<String, Float> currencyValuesFromApi = getCurrencyValuesRequest.getResponse(new SimpleCurrencyRequestArgs().setCurrencyKeys(currencyKeys));

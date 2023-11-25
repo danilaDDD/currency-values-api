@@ -6,12 +6,13 @@ import com.jfund.currencyvaluesservice.testutils.CustomerTestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class CurrencyTimeStampServiceTest {
@@ -33,7 +34,7 @@ public class CurrencyTimeStampServiceTest {
     }
 
     @Test
-    public void shouldSuccessSAveEntity(){
+    public void shouldSuccessSaveEntity(){
         Collection<CurrencyValue> currencyValues = List.of(
                 new CurrencyValue("USDRUB", 100F),
                 new CurrencyValue("EURRUB", 98.12F)
@@ -41,5 +42,11 @@ public class CurrencyTimeStampServiceTest {
 
         CurrencyTimeStamp timeStamp = new CurrencyTimeStamp(LocalDateTime.now(), currencyValues);
         currencyTimeStampService.saveEntity(timeStamp);
+    }
+
+    @Test
+    public void testGetLastEntityWhenEmptyCollection(){
+        Optional<CurrencyTimeStamp> timeStamp = this.currencyTimeStampService.findLastTimeStamp();
+        assertTrue(timeStamp.isEmpty());
     }
 }

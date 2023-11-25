@@ -8,6 +8,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceCreator;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.util.backoff.BackOff;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -27,6 +28,7 @@ public class CurrencyTimeStamp {
 
     private LocalDateTime updated = LocalDateTime.now();
 
+    @Field()
     private boolean sentToCandleApi = false;
 
     Collection<CurrencyValue> values;
@@ -37,12 +39,16 @@ public class CurrencyTimeStamp {
         this.setValues(values);
     }
     @PersistenceCreator
-    public CurrencyTimeStamp(String id, LocalDateTime dateTime, boolean sentToCandleApi, LocalDateTime updated, LocalDateTime created, Collection<CurrencyValue> values) {
-        this.id = id;
-        this.dateTime = dateTime;
-        this.sentToCandleApi = sentToCandleApi;
-        this.updated = updated;
-        this.created = created;
-        this.values = values;
+    public CurrencyTimeStamp(String id, LocalDateTime dateTime, LocalDateTime created, LocalDateTime updated, Boolean sentToCandleApi, Collection<CurrencyValue> values) {
+        this.setId(id);
+        this.setDateTime(dateTime);
+        this.setSentToCandleApi(sentToCandleApi);
+        this.setUpdated(updated);
+        this.setCreated(created);
+        this.setValues(values);
+    }
+
+    public void setSentToCandleApi(Boolean sentToCandleApi) {
+        this.sentToCandleApi = sentToCandleApi != null ? sentToCandleApi : false;
     }
 }

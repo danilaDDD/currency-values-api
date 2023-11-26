@@ -35,7 +35,9 @@ dependencies {
     implementation 'org.json:json:20230618'
     implementation files('../../library/internaljars/currency-api.jar')
     implementation files('../../library/data-utils/build/libs/data-utils-1.0.0.jar')
+    implementation files('../../library/test-utils/build/libs/test-utils-1.0.0.jar')
     implementation files('../../library/jfund-cli-lib/build/libs/jfund-cli-lib-1.0.0.jar')
+    testImplementation 'org.projectlombok:lombok:1.18.28'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'

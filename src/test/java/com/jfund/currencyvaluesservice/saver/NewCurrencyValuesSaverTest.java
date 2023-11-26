@@ -39,13 +39,13 @@ public class NewCurrencyValuesSaverTest {
 
     @Test
     public void shouldSuccessWhenOneLaunch(){
-        Map<String, Float> currencyKeyValueMap = customerTestUtils.generateCurrencyKeys(100);
+        Map<String, Float> currencyKeyValueMap = customerTestUtils.generateRandomCurrencyKeyValue();
         newCurrencyValueSaver.save(currencyKeyValueMap);
     }
 
     @Test
     public void shouldSuccessWhenParallelLaunch() throws ExecutionException, InterruptedException {
-            Map<String, Float> currencyKeyValueMap = customerTestUtils.generateCurrencyKeys(100);
+            Map<String, Float> currencyKeyValueMap = customerTestUtils.generateRandomCurrencyKeyValue();
 
             CompletableFuture<Void> task = CompletableFuture.runAsync(() -> {
                 System.out.println("start");
@@ -64,15 +64,15 @@ public class NewCurrencyValuesSaverTest {
     @Test
     public void shouldSave3TimeStampWhenDifferentInputData() throws ExecutionException, InterruptedException {
 
-        Map<String, Float> inputData1 = customerTestUtils.generateCurrencyKeys(100);
+        Map<String, Float> inputData1 = customerTestUtils.generateRandomCurrencyKeyValue();
         newCurrencyValueSaver.save(inputData1);
         Thread.sleep(20);
 
-        Map<String, Float> inputData2 = customerTestUtils.generateCurrencyKeys(100);
+        Map<String, Float> inputData2 = customerTestUtils.generateRandomCurrencyKeyValue();
         newCurrencyValueSaver.save(inputData2);
         Thread.sleep(20);
 
-        Map<String, Float> inputData3 = customerTestUtils.generateCurrencyKeys(100);
+        Map<String, Float> inputData3 = customerTestUtils.generateRandomCurrencyKeyValue();
         newCurrencyValueSaver.save(inputData3);
         Thread.sleep(20);
 

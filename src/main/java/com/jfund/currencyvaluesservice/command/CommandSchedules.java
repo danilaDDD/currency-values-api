@@ -15,7 +15,7 @@ public class CommandSchedules {
     public void setLoadCurrencyValues(LoadCurrencyValues loadCurrencyValues) {
         this.loadCurrencyValues = loadCurrencyValues;
     }
-    @Scheduled(fixedRate = 50000)
+    @Scheduled(fixedRate = 500000)
     public void loadCurrencyValues(){
         UpdateOrCreateData invokeData = loadCurrencyValues.invoke();
         System.out.println("end load currency values from api");

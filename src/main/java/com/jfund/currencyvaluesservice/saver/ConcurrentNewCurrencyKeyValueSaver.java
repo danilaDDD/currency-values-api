@@ -25,7 +25,7 @@ public class ConcurrentNewCurrencyKeyValueSaver implements NewCurrencyValueSaver
 
     private LocalDateTime actualDateTime;
 
-    private float accuracyForDifferentFloat = 0.0005F;
+    private float accuracyForDifferentFloat = 0.0000001F;
 
     @Autowired
     public void setConsumerDataSource(ConsumerDataSource consumerDataSource) {

@@ -1,7 +1,10 @@
 package com.jfund.currencyvaluesservice.saver;
 
+import com.jfund.currencyvaluesservice.entity.ChangeCurrencyValuesEntity;
 import com.jfund.currencyvaluesservice.entity.CurrencyTimeStamp;
+import com.jfund.currencyvaluesservice.entity.CurrencyValue;
 import com.jfund.currencyvaluesservice.repository.CurrencyTimeStampRepository;
+import com.jfund.currencyvaluesservice.service.ChangeCurrencyValuesService;
 import com.jfund.currencyvaluesservice.testutils.CustomerTestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +21,7 @@ public class NewCurrencyValuesSaverTest {
     private NewCurrencyValueSaver newCurrencyValueSaver;
     private CustomerTestUtils customerTestUtils;
     private CurrencyTimeStampRepository currencyTimeStampRepository;
+    private ChangeCurrencyValuesService changeCurrencyValuesService;
 
     @Autowired
     public void setNewCurrencyValueSaver(NewCurrencyValueSaver newCurrencyValueSaver) {
@@ -32,6 +36,11 @@ public class NewCurrencyValuesSaverTest {
     public void setCurrencyTimeStampRepository(CurrencyTimeStampRepository currencyTimeStampRepository) {
         this.currencyTimeStampRepository = currencyTimeStampRepository;
     }
+    @Autowired
+    public void setChangeCurrencyValuesService(ChangeCurrencyValuesService changeCurrencyValuesService) {
+        this.changeCurrencyValuesService = changeCurrencyValuesService;
+    }
+
     @BeforeEach
     public void beforeEach(){
         customerTestUtils.dropCurrencyValuesTable();
@@ -62,8 +71,24 @@ public class NewCurrencyValuesSaverTest {
 
     }
     @Test
-    public void shouldSave3TimeStampWhenDifferentInputData() throws ExecutionException, InterruptedException {
+    public void shouldSave3TimeStampWhen3DifferentInputData() throws ExecutionException, InterruptedException {
+        save3TimeStamp();
 
+        List<CurrencyTimeStamp> timeStampList = this.currencyTimeStampRepository.findAll();
+        assertEquals(3, timeStampList.size());
+    }
+
+    @Test
+    public void shouldSave3ChangedCurrencyValuesEntityWhen3DifferentInputData() throws ExecutionException, InterruptedException {
+        save3TimeStamp();
+
+        List<ChangeCurrencyValuesEntity> changeCurrencyValuesListSize3 = this.changeCurrencyValuesService.findAll()
+                .stream().filter(changeCurrencyValues -> changeCurrencyValues.getChangedValues().size() > 1).toList();
+
+        assertEquals(3, changeCurrencyValuesListSize3.size());
+    }
+
+    private void save3TimeStamp() throws InterruptedException {
         Map<String, Float> inputData1 = customerTestUtils.generateRandomCurrencyKeyValue();
         newCurrencyValueSaver.save(inputData1);
         Thread.sleep(20);
@@ -75,10 +100,5 @@ public class NewCurrencyValuesSaverTest {
         Map<String, Float> inputData3 = customerTestUtils.generateRandomCurrencyKeyValue();
         newCurrencyValueSaver.save(inputData3);
         Thread.sleep(20);
-
-
-        List<CurrencyTimeStamp> timeStampList = this.currencyTimeStampRepository.findAll();
-        assertEquals(3, timeStampList.size());
-
     }
 }

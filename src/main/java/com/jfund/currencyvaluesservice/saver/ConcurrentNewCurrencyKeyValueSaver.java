@@ -1,7 +1,7 @@
 package com.jfund.currencyvaluesservice.saver;
 
 import com.jfund.currencyvaluesservice.consuming.ConsumerDataSource;
-import com.jfund.currencyvaluesservice.entity.ChangeCurrencyValuesEntity;
+import com.jfund.currencyvaluesservice.entity.ChangeCurrencyValuesEvent;
 import com.jfund.currencyvaluesservice.entity.CurrencyTimeStamp;
 import com.jfund.currencyvaluesservice.entity.CurrencyValue;
 import com.jfund.currencyvaluesservice.exceptions.ConsumingDataSourceException;
@@ -81,7 +81,7 @@ public class ConcurrentNewCurrencyKeyValueSaver implements NewCurrencyValueSaver
         if(!differentCurrencyValues.isEmpty()){
             timeStampService.saveEntity(newTimeStamp);
 
-            ChangeCurrencyValuesEntity changeCurrencyValues = new ChangeCurrencyValuesEntity(differentCurrencyValues, this.actualDateTime);
+            ChangeCurrencyValuesEvent changeCurrencyValues = new ChangeCurrencyValuesEvent(differentCurrencyValues, this.actualDateTime);
             this.changeCurrencyValuesService.save(changeCurrencyValues);
 
             return new UpdateOrCreateData().setCreateCount(1);
@@ -111,7 +111,7 @@ public class ConcurrentNewCurrencyKeyValueSaver implements NewCurrencyValueSaver
     private UpdateOrCreateData createFirstTimeStamp(List<CurrencyValue> inputCurrencyKeyValue) {
          timeStampService.saveEntity(new CurrencyTimeStamp(actualDateTime, inputCurrencyKeyValue));
 
-         ChangeCurrencyValuesEntity changeCurrencyValues = new ChangeCurrencyValuesEntity(inputCurrencyKeyValue, this.actualDateTime);
+         ChangeCurrencyValuesEvent changeCurrencyValues = new ChangeCurrencyValuesEvent(inputCurrencyKeyValue, this.actualDateTime);
          this.changeCurrencyValuesService.save(changeCurrencyValues);
 
          return new UpdateOrCreateData().setCreateCount(1);

@@ -1,8 +1,7 @@
 package com.jfund.currencyvaluesservice.saver;
 
-import com.jfund.currencyvaluesservice.entity.ChangeCurrencyValuesEntity;
+import com.jfund.currencyvaluesservice.entity.ChangeCurrencyValuesEvent;
 import com.jfund.currencyvaluesservice.entity.CurrencyTimeStamp;
-import com.jfund.currencyvaluesservice.entity.CurrencyValue;
 import com.jfund.currencyvaluesservice.repository.CurrencyTimeStampRepository;
 import com.jfund.currencyvaluesservice.service.ChangeCurrencyValuesService;
 import com.jfund.currencyvaluesservice.testutils.CustomerTestUtils;
@@ -82,7 +81,7 @@ public class NewCurrencyValuesSaverTest {
     public void shouldSave3ChangedCurrencyValuesEntityWhen3DifferentInputData() throws ExecutionException, InterruptedException {
         save3TimeStamp();
 
-        List<ChangeCurrencyValuesEntity> changeCurrencyValuesListSize3 = this.changeCurrencyValuesService.findAll()
+        List<ChangeCurrencyValuesEvent> changeCurrencyValuesListSize3 = this.changeCurrencyValuesService.findAll()
                 .stream().filter(changeCurrencyValues -> changeCurrencyValues.getChangedValues().size() > 1).toList();
 
         assertEquals(3, changeCurrencyValuesListSize3.size());

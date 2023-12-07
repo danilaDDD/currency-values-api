@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 @Document
-public class ChangeCurrencyValuesEntity {
+public class ChangeCurrencyValuesEvent {
     @Id
     private String id;
     private List<CurrencyValue> changedValues;
@@ -21,13 +21,13 @@ public class ChangeCurrencyValuesEntity {
     private LocalDateTime changedDateTime;
 
     @PersistenceCreator
-    public ChangeCurrencyValuesEntity(String id, List<CurrencyValue> changedValues, LocalDateTime changedDateTime){
+    public ChangeCurrencyValuesEvent(String id, List<CurrencyValue> changedValues, LocalDateTime changedDateTime){
         setId(id);
         setChangedValues(changedValues);
         setChangedDateTime(changedDateTime);
     }
 
-    public ChangeCurrencyValuesEntity(List<CurrencyValue> changedValues, LocalDateTime changedDateTime) {
+    public ChangeCurrencyValuesEvent(List<CurrencyValue> changedValues, LocalDateTime changedDateTime) {
         setChangedDateTime(changedDateTime);
         setChangedValues(changedValues);
     }

@@ -1,7 +1,5 @@
 package com.jfund.currencyvaluesservice.config;
 
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.jfund.currencyvaluesservice.entity.ChangeCurrencyValuesEvent;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.context.annotation.Bean;

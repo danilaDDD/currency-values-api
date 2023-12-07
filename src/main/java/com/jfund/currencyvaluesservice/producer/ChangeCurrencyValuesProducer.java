@@ -1,7 +1,6 @@
 package com.jfund.currencyvaluesservice.producer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jfund.currencyvaluesservice.command.ChangeCurrencyValuesKafkaSender;
 import com.jfund.currencyvaluesservice.entity.ChangeCurrencyValuesEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

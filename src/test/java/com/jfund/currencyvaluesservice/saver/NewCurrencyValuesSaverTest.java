@@ -70,7 +70,7 @@ public class NewCurrencyValuesSaverTest {
 
     }
     @Test
-    public void shouldSave3TimeStampWhen3DifferentInputData() throws ExecutionException, InterruptedException {
+    public void shouldSave3TimeStampWhen3DifferentInputData() throws InterruptedException {
         save3TimeStamp();
 
         List<CurrencyTimeStamp> timeStampList = this.currencyTimeStampRepository.findAll();
@@ -78,7 +78,7 @@ public class NewCurrencyValuesSaverTest {
     }
 
     @Test
-    public void shouldSave3ChangedCurrencyValuesEntityWhen3DifferentInputData() throws ExecutionException, InterruptedException {
+    public void shouldSave3ChangedCurrencyValuesEntityWhen3DifferentInputData() throws InterruptedException {
         save3TimeStamp();
 
         List<ChangeCurrencyValuesEvent> changeCurrencyValuesListSize3 = this.changeCurrencyValuesService.findAll()

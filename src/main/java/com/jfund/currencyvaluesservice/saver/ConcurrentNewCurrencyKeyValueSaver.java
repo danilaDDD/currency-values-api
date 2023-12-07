@@ -1,12 +1,10 @@
 package com.jfund.currencyvaluesservice.saver;
 
-import com.jfund.currencyvaluesservice.consuming.ConsumerDataSource;
 import com.jfund.currencyvaluesservice.entity.ChangeCurrencyValuesEvent;
 import com.jfund.currencyvaluesservice.entity.CurrencyTimeStamp;
 import com.jfund.currencyvaluesservice.entity.CurrencyValue;
 import com.jfund.currencyvaluesservice.exceptions.ConsumingDataSourceException;
 import com.jfund.currencyvaluesservice.exceptions.CurrencyRequestException;
-import com.jfund.currencyvaluesservice.request.GetCurrencyValuesRequest;
 import com.jfund.currencyvaluesservice.service.ChangeCurrencyValuesService;
 import com.jfund.currencyvaluesservice.service.CurrencyTimeStampService;
 import com.jfund.jfundclilib.UpdateOrCreateData;
@@ -21,23 +19,12 @@ import java.util.*;
 @Slf4j(topic = "errors")
 @Component
 public class ConcurrentNewCurrencyKeyValueSaver implements NewCurrencyValueSaver {
-    private ConsumerDataSource consumerDataSource;
-    private GetCurrencyValuesRequest getCurrencyValuesRequest;
     private CurrencyTimeStampService timeStampService;
 
     private LocalDateTime actualDateTime;
 
-    private float accuracyForDifferentFloat = 0.0000001F;
+    private final float accuracyForDifferentFloat = 0.0000001F;
     private ChangeCurrencyValuesService changeCurrencyValuesService;
-
-    @Autowired
-    public void setConsumerDataSource(ConsumerDataSource consumerDataSource) {
-        this.consumerDataSource = consumerDataSource;
-    }
-    @Autowired
-    public void setGetCurrencyValuesRequest(GetCurrencyValuesRequest getCurrencyValuesRequest) {
-        this.getCurrencyValuesRequest = getCurrencyValuesRequest;
-    }
     @Autowired
     public void setTimeStampService(CurrencyTimeStampService timeStampService) {
         this.timeStampService = timeStampService;

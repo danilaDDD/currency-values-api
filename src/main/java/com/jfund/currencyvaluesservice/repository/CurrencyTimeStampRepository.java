@@ -1,14 +1,11 @@
 package com.jfund.currencyvaluesservice.repository;
 
 import com.jfund.currencyvaluesservice.entity.CurrencyTimeStamp;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 
-@Repository
-public interface CurrencyTimeStampRepository extends MongoRepository<CurrencyTimeStamp, String> {
-    List<CurrencyTimeStamp> findByOrderByDateTimeDesc(Pageable pageable);
+public interface CurrencyTimeStampRepository
+        extends ReactiveCrudRepository<CurrencyTimeStamp, UUID> {
+
 }

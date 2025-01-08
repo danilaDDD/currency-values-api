@@ -11,44 +11,24 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.util.backoff.BackOff;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Getter
 @Setter
+@AllArgsConstructor
 @Document(collection = "timeStamps")
 public class CurrencyTimeStamp {
     @Id
-    private String id = LocalDateTime.now().toString();
+    private UUID id;
+    private LocalDateTime dateTime;
+    private Collection<CurrencyValue> values;
+    private Boolean sentToCandleApi;
 
-    private LocalDateTime dateTime = LocalDateTime.now();
-
-    private LocalDateTime created = LocalDateTime.now();
-
-    private LocalDateTime updated = LocalDateTime.now();
-
-    @Field()
-    private boolean sentToCandleApi = false;
-
-    Collection<CurrencyValue> values;
+    public CurrencyTimeStamp(LocalDateTime dateTime, Collection<CurrencyValue> values, Boolean sentToCandleApi) {
+        this(UUID.randomUUID(), dateTime, values.stream().toList(), sentToCandleApi);
+    }
 
     public CurrencyTimeStamp(LocalDateTime dateTime, Collection<CurrencyValue> values) {
-        this.setId(dateTime.toString());
-        this.setDateTime(dateTime);
-        this.setValues(values);
-    }
-    @PersistenceCreator
-    public CurrencyTimeStamp(String id, LocalDateTime dateTime, LocalDateTime created, LocalDateTime updated, Boolean sentToCandleApi, Collection<CurrencyValue> values) {
-        this.setId(id);
-        this.setDateTime(dateTime);
-        this.setSentToCandleApi(sentToCandleApi);
-        this.setUpdated(updated);
-        this.setCreated(created);
-        this.setValues(values);
-    }
-
-    public void setSentToCandleApi(Boolean sentToCandleApi) {
-        this.sentToCandleApi = sentToCandleApi != null ? sentToCandleApi : false;
+       this(dateTime, values, true);
     }
 }

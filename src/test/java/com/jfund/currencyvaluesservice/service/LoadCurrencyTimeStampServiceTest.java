@@ -2,6 +2,7 @@ package com.jfund.currencyvaluesservice.service;
 
 import com.jfund.currencyvaluesservice.entity.CurrencyTimeStamp;
 import com.jfund.currencyvaluesservice.entity.CurrencyValue;
+import com.jfund.currencyvaluesservice.exceptions.LoadCurrencyKeysException;
 import currencyapi.api.AsyncCurrencyApi;
 import currencyapi.data.ApiCurrencyPair;
 import currencyapi.data.ApiCurrencyValue;
@@ -25,8 +26,6 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -40,53 +39,39 @@ class LoadCurrencyTimeStampServiceTest {
     @Mock
     private AsyncCurrencyApi currencyApi;
 
-    @BeforeEach
-    void setUp() {
-    }
 
+    // @FIXME: verify by count is bad practice
     @Test
     void testLoad_WithValidKeys_ShouldReturnCurrencyTimeStamps() {
-        List<ApiCurrencyPair> apiCurrencyPairs = Stream.of(VALID_KEYS).map(ApiCurrencyPair::of).toList();
+        List<ApiCurrencyPair> apiCurrencyPairs = generateApiCurrencyPairs(VALID_KEYS);
         List<ApiCurrencyValue> apiCurrencyValues = generateCurrencyValues(VALID_KEYS);
         CompletableFuture<List<ApiCurrencyValue>> currencyApiResponse = CompletableFuture.completedFuture(apiCurrencyValues);
 
         when(currencyApi.getCurrencyValues(apiCurrencyPairs))
                 .thenReturn(currencyApiResponse);
 
-        Set<CurrencyValue> expectedCurrencyValuesSet = apiCurrencyValues.stream()
-                .map(apiCurrencyValue -> {
-                    ApiCurrencyPair apiPair = apiCurrencyValue.apiCurrencyPair();
-                    String key = apiPair.fromCurrency() + apiPair.toCurrency();
-                    float value = apiCurrencyValue.value();
+        int expectedCount = apiCurrencyValues.size();
 
-                    return new CurrencyValue(key, value);
-                })
-                .collect(Collectors.toSet());
+        Flux<CurrencyValue> actualValuesFlux = loadCurrencyTimeStampService.loadCurrencyTimeStamp(Flux.fromArray(VALID_KEYS))
+                .map(CurrencyTimeStamp::getValues)
+                .flatMapMany(Flux::fromIterable);
 
 
-        StepVerifier.create(loadCurrencyTimeStampService.loadCurrencyTimeStamp(Flux.fromArray(VALID_KEYS))
-                        .map(CurrencyTimeStamp::getValues)
-                        .collect(Collectors.toSet()))
-                .expectNextCount(expectedCurrencyValuesSet.size())
+        StepVerifier.create(actualValuesFlux)
+                .expectNextCount(expectedCount)
                 .verifyComplete();
 
     }
 
     @Test
-    void loadCurrencyTimeStamp_WithEmptyKeys_ShouldReturnEmptyFlux() {
+    void testLoad_WithEmptyResponse_ShouldReturnLoadCurrencyKeysException() {
+        List<ApiCurrencyPair> apiPairs = generateApiCurrencyPairs(VALID_KEYS);
+        when(currencyApi.getCurrencyValues(apiPairs))
+                .thenReturn(CompletableFuture.completedFuture(List.of()));
 
-//        StepVerifier.create(loadCurrencyTimeStampService.loadCurrencyTimeStamp(Flux.empty()))
-//                .verifyComplete();
-    }
-
-    @Test
-    void loadCurrencyTimeStamp_WithInvalidKey_ShouldReturnError() {
-//        when(currencyApi.getCurrencyTimeStamp(anyString()))
-//                .thenReturn(Mono.error(new RuntimeException("Invalid key")));
-//
-//        StepVerifier.create(loadCurrencyTimeStampService.loadCurrencyTimeStamp(Flux.just("INVALID_KEY")))
-//                .expectError(RuntimeException.class)
-//                .verify();
+        StepVerifier.create(loadCurrencyTimeStampService.loadCurrencyTimeStamp(Flux.fromArray(VALID_KEYS)))
+                .expectError(LoadCurrencyKeysException.class)
+                .verify();
     }
 
     private List<ApiCurrencyValue> generateCurrencyValues(String[] keys) {
@@ -96,10 +81,9 @@ class LoadCurrencyTimeStampServiceTest {
                 .toList();
     }
 
-    private CompletableFuture<List<ApiCurrencyValue>> generateApiCurrencyValues(List<String> keys) {
-        Random random = new Random();
-        return CompletableFuture.completedFuture(keys.stream()
-                .map(key -> new ApiCurrencyValue(ApiCurrencyPair.of(key), random.nextFloat()))
-                .toList());
+    private List<ApiCurrencyPair> generateApiCurrencyPairs(String[] keys) {
+        return Stream.of(keys)
+                .map(ApiCurrencyPair::of)
+                .toList();
     }
 }

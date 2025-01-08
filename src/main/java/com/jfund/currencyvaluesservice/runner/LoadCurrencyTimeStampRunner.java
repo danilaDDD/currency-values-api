@@ -8,6 +8,7 @@ import com.jfund.currencyvaluesservice.service.SaveCurrencyTimeStampService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Component
 @RequiredArgsConstructor
@@ -18,10 +19,10 @@ public class LoadCurrencyTimeStampRunner implements Runnable{
 
     @Override
     public void run() {
-        Flux<CurrencyTimeStamp> loadedTimeStampFlux = loadCurrencyTimeStampService
+        Mono<CurrencyTimeStamp> loadedTimeStampMono = loadCurrencyTimeStampService
                  .loadCurrencyTimeStamp(currencyKeyCRUDService.loadCurrencyKeys().map(CurrencyKey::getKey));
 
-        loadedTimeStampFlux.collectList().subscribe(timeStamps -> timeStamps.forEach(saveCurrencyTimeStampService::saveCurrencyTimeStampIfDifferent));
+        loadedTimeStampMono.subscribe(saveCurrencyTimeStampService::saveCurrencyTimeStampIfDifferent);
 
     }
 }

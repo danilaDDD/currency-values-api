@@ -18,7 +18,6 @@ public class ChangeCurrencyValuesProducerRunner implements Runnable {
     private String topic;
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ChangeCurrencyValuesEventService eventService;
-    private final ObjectMapper objectMapper;
 
     public void run() {
         Flux<String> stringEventFlux = eventService.getSerializedFlux();

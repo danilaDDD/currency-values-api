@@ -1,15 +1,17 @@
 package com.jfund.currencyvaluesservice.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @AllArgsConstructor
-@Document(collation = "currency_keys")
+@EqualsAndHashCode
+@Document
 public class CurrencyKey {
     @Id
     private UUID id;
@@ -17,5 +19,12 @@ public class CurrencyKey {
 
     public CurrencyKey(String key) {
         this(UUID.randomUUID(), key);
+    }
+
+    @Override
+    public String toString() {
+        return "CurrencyKey{" +
+                "key='" + key + '\'' +
+                '}';
     }
 }

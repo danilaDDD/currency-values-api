@@ -1,8 +1,6 @@
 package com.jfund.currencyvaluesservice.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.AccessType;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceCreator;
@@ -16,7 +14,9 @@ import java.util.*;
 @Getter
 @Setter
 @AllArgsConstructor
-@Document(collection = "timeStamps")
+@NoArgsConstructor
+@ToString
+@Document
 public class CurrencyTimeStamp {
     @Id
     private UUID id;
@@ -30,5 +30,19 @@ public class CurrencyTimeStamp {
 
     public CurrencyTimeStamp(LocalDateTime dateTime, Collection<CurrencyValue> values) {
        this(dateTime, values, true);
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        CurrencyTimeStamp that = (CurrencyTimeStamp) object;
+
+        return Objects.equals(dateTime, that.dateTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(dateTime);
     }
 }

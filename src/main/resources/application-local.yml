@@ -3,15 +3,13 @@ spring:
     mongodb:
       host: ${DB_HOST:localhost}
       port: ${DB_PORT:27017}
-      database: ${DB_NAME:jfundCurrencyValues}
+      database: ${DB_NAME:jfundLocalCurrencyValuesDB}
       password: ${DB_PASSWORD:float123}
-      username: ${DB_USER:jfund}
+      username: ${DB_USER:jfundAdmin}
       authentication-database: admin
 
 app:
-  currencyApi:
-    accessKey: ${CURRENCY_ACCESS_KEY:ec142f3d17eb97486b71d155d609471a}
-
   kafka:
     server: ${KAFKA_SERVER:localhost:9092}
-    currency-keys-topic: ${CURRENCY-KEYS-TOPIC:jfund-currency-keys}
+    currency-keys-topic: ${CURRENCY_KEYS_TOPIC:jfund-currency-keys}
+    currency-values-topic: ${CURRENCY_VALUES_TOPIC:jfund-currency-values}

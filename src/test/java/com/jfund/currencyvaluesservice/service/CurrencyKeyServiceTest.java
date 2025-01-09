@@ -12,6 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
@@ -19,7 +20,7 @@ import java.util.stream.Stream;
 
 @SpringBootTest
 @ActiveProfiles("test")
-class CurrencyKeyCRUDServiceTest {
+class CurrencyKeyServiceTest {
     private final static String[] KEYS = {"EURUSD", "EURGBP", "EURJPY", "USDJPY", "USDGBP", "GBPJPY"};
     private final static Comparator<CurrencyKey> KEY_COMPARATOR = Comparator.comparing(CurrencyKey::getKey);
 
@@ -27,7 +28,7 @@ class CurrencyKeyCRUDServiceTest {
     @Autowired
     private CurrencyKeyRepository currencyKeyRepository;
     @Autowired
-    private CurrencyKeyCRUDService crudService;
+    private CurrencyKeyService crudService;
 
     @BeforeEach
     void setUp() {
@@ -58,8 +59,8 @@ class CurrencyKeyCRUDServiceTest {
         crudService.updateCurrencyKeys(Flux.fromIterable(updatedCurrencyKeyList)).block();
 
         currencyKeyList.addAll(updatedCurrencyKeyList);
-        List<CurrencyKey> expected = sortedList(currencyKeyList);
-        StepVerifier.create(findAllSorted())
+        List<String> expected = sortedList(currencyKeyList).stream().map(CurrencyKey::getKey).toList();
+        StepVerifier.create(findAllSorted().map(CurrencyKey::getKey))
                 .expectNextSequence(expected)
                 .verifyComplete();
     }
@@ -71,13 +72,13 @@ class CurrencyKeyCRUDServiceTest {
         crudService.updateCurrencyKeys(Flux.fromIterable(currencyKeyList)).block();
 
 
-        StepVerifier.create(crudService.loadCurrencyKeys().sort(KEY_COMPARATOR))
-                .expectNextSequence(currencyKeyList)
+        StepVerifier.create(crudService.loadCurrencyKeys().sort(KEY_COMPARATOR).map(CurrencyKey::getKey))
+                .expectNextSequence(currencyKeyList.stream().map(CurrencyKey::getKey).toList())
                 .verifyComplete();
     }
 
     @Test
-    void testLoad_WithNotEmpty_ShouldSuccessfully() {
+    void testLoad_WithNotEmpty_ShouldGetAll() {
         List<CurrencyKey> currencyKeyList = buildKeysObjects();
         currencyKeyRepository.saveAll(currencyKeyList).blockLast();
 
@@ -94,10 +95,10 @@ class CurrencyKeyCRUDServiceTest {
     }
 
     private List<CurrencyKey> buildKeysObjects() {
-        return Stream.of(KEYS)
+        return new ArrayList<>(Stream.of(KEYS)
                 .map(CurrencyKey::new)
                 .sorted(KEY_COMPARATOR)
-                .toList();
+                .toList());
     }
 
     private Flux<CurrencyKey> findAllSorted() {

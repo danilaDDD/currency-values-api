@@ -9,4 +9,8 @@ public class ConsumingDataSourceException extends RuntimeException{
     public ConsumingDataSourceException(JsonProcessingException e){
         super(e);
     }
+
+    public ConsumingDataSourceException(String message) {
+        super(message);
+    }
 }

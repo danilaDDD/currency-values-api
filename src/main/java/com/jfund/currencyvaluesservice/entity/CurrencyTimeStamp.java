@@ -13,19 +13,20 @@ import java.util.*;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 @ToString
 @Document
 public class CurrencyTimeStamp {
     @Id
-    private UUID id;
+    private String id;
     private LocalDateTime dateTime;
     private Collection<CurrencyValue> values;
     private Boolean sentToCandleApi;
 
     public CurrencyTimeStamp(LocalDateTime dateTime, Collection<CurrencyValue> values, Boolean sentToCandleApi) {
-        this(UUID.randomUUID(), dateTime, values.stream().toList(), sentToCandleApi);
+        this.dateTime = dateTime;
+        this.values = values;
+        this.sentToCandleApi = sentToCandleApi;
     }
 
     public CurrencyTimeStamp(LocalDateTime dateTime, Collection<CurrencyValue> values) {
@@ -37,12 +38,14 @@ public class CurrencyTimeStamp {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         CurrencyTimeStamp that = (CurrencyTimeStamp) object;
-
-        return Objects.equals(dateTime, that.dateTime);
+        if(id != null)
+            return Objects.equals(id, that.id);
+        else
+            return Objects.equals(dateTime, that.dateTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(dateTime);
+        return Objects.hashCode(id != null ? id: dateTime);
     }
 }

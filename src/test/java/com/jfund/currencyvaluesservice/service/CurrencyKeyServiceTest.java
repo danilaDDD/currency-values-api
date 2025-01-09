@@ -53,7 +53,7 @@ class CurrencyKeyServiceTest {
         currencyKeyRepository.saveAll(currencyKeyList).blockLast();
 
         List<CurrencyKey> updatedCurrencyKeyList = currencyKeyList.stream()
-                .map(currencyKey -> new CurrencyKey(currencyKey.getId(), currencyKey.getKey() + "_updated"))
+                .map(currencyKey -> new CurrencyKey(currencyKey.getKey() + "_updated"))
                 .toList();
 
         crudService.updateCurrencyKeys(Flux.fromIterable(updatedCurrencyKeyList)).block();

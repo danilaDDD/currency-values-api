@@ -36,7 +36,6 @@ dependencies {
 
 
     implementation files('../../library/currency-api/build/libs/currency-api-1.0.0-SNAPSHOT.jar')
-    implementation files('../../library/common-lib/build/libs/common-lib-1.0-SNAPSHOT.jar')
 
     compileOnly 'org.projectlombok:lombok:1.18.30'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -45,6 +44,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
     implementation 'org.springframework.boot:spring-boot-starter-groovy-templates'
+    implementation 'org.springframework.boot:spring-boot-starter-logging'
+    implementation 'ch.qos.logback:logback-classic'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.projectreactor:reactor-test'
     testImplementation 'org.projectlombok:lombok:1.18.30'

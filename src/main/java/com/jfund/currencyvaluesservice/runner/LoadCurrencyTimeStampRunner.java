@@ -6,9 +6,13 @@ import com.jfund.currencyvaluesservice.service.CurrencyKeyService;
 import com.jfund.currencyvaluesservice.service.LoadCurrencyTimeStampService;
 import com.jfund.currencyvaluesservice.service.SaveCurrencyTimeStampService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class LoadCurrencyTimeStampRunner implements Runnable{
@@ -21,7 +25,9 @@ public class LoadCurrencyTimeStampRunner implements Runnable{
         Mono<CurrencyTimeStamp> loadedTimeStampMono = loadCurrencyTimeStampService
                  .loadCurrencyTimeStamp(currencyKeyService.loadCurrencyKeys().map(CurrencyKey::getKey));
 
-        saveCurrencyTimeStampService.saveCurrencyTimeStampIfDifferent(loadedTimeStampMono).subscribe();
+        saveCurrencyTimeStampService.saveCurrencyTimeStampIfDifferent(loadedTimeStampMono)
+                .doOnError(e -> log.error(e.getMessage()))
+                .subscribe();
 
     }
 }

@@ -46,7 +46,7 @@ public class SaveCurrencyTimeStampService {
         }
 
         lastValuesSet.addAll(differentValuesSet);
-        CurrencyTimeStamp newTimeStamp = new CurrencyTimeStamp(inputTimeStamp.getDateTime(), lastValuesSet);
+        CurrencyTimeStamp newTimeStamp = new CurrencyTimeStamp(inputTimeStamp.getDateTime(), differentValuesSet);
         return repository.save(newTimeStamp);
     }
 }

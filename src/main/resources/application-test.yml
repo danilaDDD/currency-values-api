@@ -13,8 +13,11 @@ spring:
       authentication-database: admin
 
 app:
+#  scheduler disabled for tests
   scheduler:
     enabled: false
+    load-currency-values: 1 * */20 * * *
+    send-currency-values: 10 * */30 * * *
   kafka:
     server: ${KAFKA_SERVER:localhost:9092}
     currency-keys-topic: ${CURRENCY_KEYS_TOPIC:jfund-currency-keys}

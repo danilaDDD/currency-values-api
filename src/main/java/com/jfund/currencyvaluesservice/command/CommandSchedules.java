@@ -18,13 +18,13 @@ public class CommandSchedules {
     @Value("${app.scheduler.enabled}")
     private boolean enabled;
 
-    @Scheduled(fixedRate = 500000)
+    @Scheduled(cron = "${app.scheduler.load-currency-values}")
     public void loadCurrencyValues(){
         if(enabled)
             loadCurrencyTimeStampRunner.run();
     }
 
-    @Scheduled(fixedRate = 30000)
+    @Scheduled(cron = "${app.scheduler.send-currency-values}")
     public void sendCurrencyValuesChanges(){
         if(enabled)
             changeCurrencyValuesSender.run();

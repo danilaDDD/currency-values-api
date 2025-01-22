@@ -13,6 +13,8 @@ spring:
       authentication-database: admin
 
 app:
+  scheduler:
+    enabled: false
   kafka:
     server: ${KAFKA_SERVER:localhost:9092}
     currency-keys-topic: ${CURRENCY_KEYS_TOPIC:jfund-currency-keys}

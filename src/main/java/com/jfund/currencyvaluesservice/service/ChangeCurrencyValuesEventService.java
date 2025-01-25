@@ -47,7 +47,7 @@ public class ChangeCurrencyValuesEventService {
         }
     }
 
-    public Mono<Void> save(List<CurrencyValue> currencyValues) {
-        return eventRepository.save(new ChangeCurrencyValuesEvent(currencyValues)).then();
+    public Mono<ChangeCurrencyValuesEvent> save(ChangeCurrencyValuesEvent event) {
+        return eventRepository.save(event);
     }
 }

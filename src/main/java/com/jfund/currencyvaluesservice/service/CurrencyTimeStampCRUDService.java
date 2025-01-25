@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -18,19 +17,18 @@ public class CurrencyTimeStampCRUDService {
     private final CurrencyTimeStampRepository currencyTimeStampRepository;
     private final ChangeCurrencyValuesEventService changeCurrencyValuesEventService;
 
-    public Mono<Void> save(@NotNull CurrencyTimeStamp currencyTimeStamp) {
-        /**
-         * return Mono of action of saving currencyTimeStamp to repository then saving the event
-         */
-        return currencyTimeStampRepository.save(currencyTimeStamp)
-                .then(saveChangeCurrencyValuesEvent(currencyTimeStamp));
-
+    public Mono<CurrencyTimeStamp> save(@NotNull CurrencyTimeStamp currencyTimeStamp) {
+        return currencyTimeStampRepository
+                .save(currencyTimeStamp)
+                .flatMap(savedTimeStamp -> saveChangeCurrencyValuesEvent(savedTimeStamp)
+                        .thenReturn(savedTimeStamp));
 
     }
 
-    private Mono<Void> saveChangeCurrencyValuesEvent(CurrencyTimeStamp timeStamp) {
+    private Mono<ChangeCurrencyValuesEvent> saveChangeCurrencyValuesEvent(@NotNull CurrencyTimeStamp timeStamp) {
         return changeCurrencyValuesEventService
-                .save(new ArrayList<>(timeStamp.getValues()));
+                .save(new ChangeCurrencyValuesEvent(new ArrayList<>(timeStamp.getValues()),
+                        timeStamp.getDateTime(), true));
     }
 
     public Mono<CurrencyTimeStamp> getLastTimeStamp() {

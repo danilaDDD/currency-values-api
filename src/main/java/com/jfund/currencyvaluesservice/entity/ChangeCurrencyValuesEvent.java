@@ -21,10 +21,14 @@ public class ChangeCurrencyValuesEvent {
     private LocalDateTime changedDateTime;
     private Boolean actual;
 
-    public ChangeCurrencyValuesEvent(List<CurrencyValue> changedValues) {
+    public ChangeCurrencyValuesEvent(List<CurrencyValue> changedValues, LocalDateTime changedDateTime, Boolean actual) {
         this.changedValues = changedValues;
-        changedDateTime = LocalDateTime.now();
-        actual = true;
+        this.changedDateTime = changedDateTime;
+        this.actual = actual;
+    }
+
+    public ChangeCurrencyValuesEvent(List<CurrencyValue> changedValues, LocalDateTime changedDateTime) {
+        this(changedValues, changedDateTime, true);
     }
 
     @Override

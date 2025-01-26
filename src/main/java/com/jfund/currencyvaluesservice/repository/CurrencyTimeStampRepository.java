@@ -12,6 +12,8 @@ import java.util.UUID;
 public interface CurrencyTimeStampRepository
         extends ReactiveCrudRepository<CurrencyTimeStamp, UUID> {
     Mono<CurrencyTimeStamp> findFirstByOrderByDateTimeDesc();
+
     Flux<CurrencyTimeStamp> findByOrderByDateTimeDesc();
 
+    Flux<CurrencyTimeStamp> findBySentFalseOrderByDateTimeDesc();
 }

@@ -21,16 +21,16 @@ public class CurrencyTimeStamp {
     private String id;
     private LocalDateTime dateTime;
     private Collection<CurrencyValue> values;
-    private Boolean sentToCandleApi;
+    private boolean sent;
 
-    public CurrencyTimeStamp(LocalDateTime dateTime, Collection<CurrencyValue> values, Boolean sentToCandleApi) {
+    public CurrencyTimeStamp(LocalDateTime dateTime, Collection<CurrencyValue> values, boolean sent) {
         this.dateTime = dateTime;
         this.values = values;
-        this.sentToCandleApi = sentToCandleApi;
+        this.sent = sent;
     }
 
     public CurrencyTimeStamp(LocalDateTime dateTime, Collection<CurrencyValue> values) {
-       this(dateTime, values, true);
+       this(dateTime, values, false);
     }
 
     @Override

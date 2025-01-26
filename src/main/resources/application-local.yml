@@ -9,6 +9,10 @@ spring:
       authentication-database: admin
 
 app:
+  scheduler:
+    enabled: ${SCHEDULER_ENABLED:true}
+    load-currency-values: ${LOAD_CURRENCY_VALUES_CRON:*/10 * * * * *}
+    send-currency-values: ${SEND_CURRENCY_VALUES_CRON:*/10 * * * * *}
   kafka:
     server: ${KAFKA_SERVER:localhost:9092}
     currency-keys-topic: ${CURRENCY_KEYS_TOPIC:jfund-currency-keys}

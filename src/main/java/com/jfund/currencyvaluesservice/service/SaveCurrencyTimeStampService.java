@@ -14,12 +14,12 @@ import java.util.*;
 @RequiredArgsConstructor
 public class SaveCurrencyTimeStampService {
     private final static Comparator<CurrencyValue> CURRENCY_VALUE_COMPARATOR = Comparator.comparing(CurrencyValue::getValue);
-    private final CurrencyTimeStampCRUDService currencyTimeStampCRUDService;
+    private final CurrencyTimeStampRepository repository;
 
     public Mono<CurrencyTimeStamp> saveCurrencyTimeStampIfDifferent(Mono<CurrencyTimeStamp> inputTimeStampMono) {
 
-        return currencyTimeStampCRUDService
-                .getLastTimeStamp()
+        return repository
+                .findFirstByOrderByDateTimeDesc()
                 .flatMap(lastTimeStamp -> inputTimeStampMono
                         .flatMap(inputTimeStamp -> performAction(lastTimeStamp, inputTimeStamp)))
                 .switchIfEmpty(inputTimeStampMono
@@ -33,7 +33,7 @@ public class SaveCurrencyTimeStampService {
     private Mono<CurrencyTimeStamp> performAction(CurrencyTimeStamp lastTimeStamp,
                                                   CurrencyTimeStamp inputTimeStamp) {
         if(lastTimeStamp == null)
-            return currencyTimeStampCRUDService.save(inputTimeStamp);
+            return repository.save(inputTimeStamp);
 
         if(inputTimeStamp.getValues().isEmpty())
             return Mono.error(new SaveNewValuesException("input values list is empty"));
@@ -57,7 +57,7 @@ public class SaveCurrencyTimeStampService {
         }
 
         CurrencyTimeStamp newTimeStamp = new CurrencyTimeStamp(inputTimeStamp.getDateTime(), differentValuesSet);
-        return currencyTimeStampCRUDService.save(newTimeStamp);
+        return repository.save(newTimeStamp);
     }
 }
 

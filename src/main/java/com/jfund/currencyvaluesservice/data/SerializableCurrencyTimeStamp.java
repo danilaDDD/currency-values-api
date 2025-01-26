@@ -8,12 +8,12 @@ import java.util.UUID;
 
 @Getter
 @AllArgsConstructor
-public class SerializableChangeCurrencyValues {
+public class SerializableCurrencyTimeStamp {
     private final UUID id;
     private final String serializedValues;
     private final LocalDateTime changedDateTime;
 
-    public SerializableChangeCurrencyValues(String serializedValues, LocalDateTime changedDateTime) {
+    public SerializableCurrencyTimeStamp(String serializedValues, LocalDateTime changedDateTime) {
         this(UUID.randomUUID(), serializedValues, changedDateTime);
     }
 }

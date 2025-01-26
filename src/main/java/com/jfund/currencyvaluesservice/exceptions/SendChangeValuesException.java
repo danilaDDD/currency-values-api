@@ -1,13 +1,13 @@
 package com.jfund.currencyvaluesservice.exceptions;
 
-import com.jfund.currencyvaluesservice.entity.ChangeCurrencyValuesEvent;
+import com.jfund.currencyvaluesservice.entity.CurrencyTimeStamp;
 
 public class SendChangeValuesException extends RuntimeException {
     public SendChangeValuesException(Exception e) {
         super(e);
     }
 
-    public SendChangeValuesException(ChangeCurrencyValuesEvent changeEvent) {
-        super(String.format("serialize %s with exception", changeEvent));
+    public SendChangeValuesException(CurrencyTimeStamp currencyTimeStamp) {
+        super(String.format("serialize %s with exception", currencyTimeStamp));
     }
 }

@@ -7,7 +7,7 @@ spring:
   application:
     name: currency-values-service
   profiles:
-    active: ${PROFILE:local}
+    active: ${PROFILE:dev}
 
 server:
   port: 8082
